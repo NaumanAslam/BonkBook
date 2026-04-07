@@ -10,9 +10,9 @@
 ### One-time notarytool setup
 ```bash
 xcrun notarytool store-credentials "BonkBook" \
-  --apple-id "your@email.com" \
+  --apple-id "reach.out.nauman@gmail.com" \
   --team-id "92X99MPMUT" \
-  --password "xxxx-xxxx-xxxx-xxxx"
+  --password "ldjz-aryc-kqms-efpx"
 ```
 Use an app-specific password from appleid.apple.com (not your Apple ID password).
 
@@ -53,72 +53,53 @@ The app spawns `sudo spank --stdio` as a child process and reads JSON slap event
 
 ## Shipping a New Version
 
-### 1. Make code changes
+**Step 1 — Make and test your changes in Xcode**
+- Edit Swift files, press Cmd+R to run and test
+- When happy, move to Step 2
 
-Edit Swift source files in `BonkBook/`. If you change the UI or logic, test with Cmd+R in Xcode first.
+**Step 2 — Bump the version in `BonkBook/Info.plist`**
+- `CFBundleShortVersionString` → user-facing version e.g. `1.1`
+- `CFBundleVersion` → build number e.g. `2`
 
-### 2. Update the spank binary (if needed)
-
-If the Go `spank` project was updated:
-```bash
-# Build spank (must use original binary — rebuilding breaks macOS signing)
-# Only update if the original binary from the spank project works
-cp /Users/naumanaslam/Downloads/XcodeProjects/spank/spank BonkBook/spank
-```
-
-### 3. Bump the version
-
-In `BonkBook/Info.plist`, update:
-- `CFBundleShortVersionString` — user-facing version (e.g. `1.1`)
-- `CFBundleVersion` — build number (e.g. `2`)
-
-### 4. Regenerate Xcode project (if project.yml changed)
-
-```bash
-xcodegen generate
-```
-
-### 5. Build, sign, and package
-
+**Step 3 — Build the DMG**
 ```bash
 bash Scripts/build-dmg.sh
 ```
 
-This will:
-- Build Release with Developer ID Application signing
-- Inject and sign the spank binary
-- Re-sign the app bundle with timestamp
-- Create `build/BonkBook.dmg`
-
-### 6. Notarize
-
+**Step 4 — Notarize**
 ```bash
 xcrun notarytool submit build/BonkBook.dmg --keychain-profile "BonkBook" --wait
 ```
-
-Takes 1–5 minutes. Look for `status: Accepted`.
-
-If rejected, check the log:
+Wait for `status: Accepted`. If rejected, check what went wrong:
 ```bash
 xcrun notarytool log <submission-id> --keychain-profile "BonkBook"
 ```
 
-### 7. Staple
-
+**Step 5 — Staple**
 ```bash
 xcrun stapler staple build/BonkBook.dmg
 ```
 
-### 8. Verify
+**Step 6 — Upload `build/BonkBook.dmg` to Gumroad / your website**
 
+That's it.
+
+---
+
+## Development vs Production
+
+| | Xcode (Cmd+R) | DMG install (/Applications) |
+|---|---|---|
+| Use for | Testing changes | Shipping to users |
+| spank path | DerivedData/... | /Applications/BonkBook.app/Contents/MacOS/spank |
+| Sudoers rule | Must re-run Grant Permission each time you clean build | Set once on first launch, persists |
+| Sound changes | Rebuild + Cmd+R | Rebuild DMG + reinstall |
+
+**Important:** If you have the DMG version installed and switch to Xcode testing, delete the sudoers file first so Grant Permission rewrites it with the correct DerivedData path:
 ```bash
-xcrun stapler validate build/BonkBook.dmg
-# Should print: The validate action worked!
+sudo rm /etc/sudoers.d/bonkbook
 ```
-
-### 9. Upload to Gumroad / website
-
-Upload `build/BonkBook.dmg`. Done.
+Then relaunch from Xcode and click Grant Permission. Reverse this when going back to the DMG version.
 
 ---
 

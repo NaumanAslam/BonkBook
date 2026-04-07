@@ -211,6 +211,7 @@ struct SoundPackCard: View {
                 ForEach(SoundMode.allCases) { mode in
                     PackButton(mode: mode, isSelected: spankManager.soundMode == mode) {
                         spankManager.soundMode = mode
+                        if spankManager.isRunning { spankManager.restart() }
                     }
                 }
             }

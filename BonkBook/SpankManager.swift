@@ -75,7 +75,12 @@ class SpankManager: ObservableObject {
     // MARK: - Setup
 
     func checkSudoSetup() {
-        isSudoSetup = FileManager.default.fileExists(atPath: Self.sudoersPath)
+        guard let contents = try? String(contentsOfFile: Self.sudoersPath, encoding: .utf8) else {
+            isSudoSetup = false
+            return
+        }
+        // Verify the sudoers rule points to the current bundled spank path
+        isSudoSetup = contents.contains(Self.spankPath)
     }
 
     func installSudoersRule(completion: @escaping (Bool) -> Void) {
@@ -107,12 +112,17 @@ class SpankManager: ObservableObject {
         proc.executableURL = URL(fileURLWithPath: "/usr/bin/sudo")
 
         // Use --stdio: spank handles audio, Swift handles UI
-        let args: [String] = [
+        var args: [String] = [
             Self.spankPath,
             "--stdio",
             "--min-amplitude", String(format: "%.3f", sensitivity),
             "--cooldown", String(cooldownMs)
         ]
+        switch soundMode {
+        case .sexy: args.append("--sexy")
+        case .halo:  args.append("--halo")
+        case .pain:  break
+        }
 
         proc.arguments = args
         proc.standardOutput = stdout

@@ -38,14 +38,27 @@ SPANK_DEST="$APP_PATH/Contents/MacOS/spank"
 cp "$SPANK_SRC" "$SPANK_DEST"
 chmod +x "$SPANK_DEST"
 
+sign_with_retry() {
+  local max=5
+  for i in $(seq 1 $max); do
+    if codesign "$@"; then
+      return 0
+    fi
+    echo "    Timestamp server unavailable, retrying ($i/$max)..."
+    sleep 3
+  done
+  echo "ERROR: Signing failed after $max attempts."
+  exit 1
+}
+
 echo "==> Signing spank with Developer ID + timestamp..."
-codesign --force --sign "$IDENTITY" \
+sign_with_retry --force --sign "$IDENTITY" \
   --options runtime \
   --timestamp \
   "$SPANK_DEST"
 
 echo "==> Re-signing app bundle (outer only, with timestamp)..."
-codesign --force --sign "$IDENTITY" \
+sign_with_retry --force --sign "$IDENTITY" \
   --options runtime \
   --timestamp \
   --entitlements "$PROJECT_DIR/BonkBook/BonkBook.entitlements" \
