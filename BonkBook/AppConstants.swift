@@ -9,4 +9,8 @@ enum AppConstants {
 
     /// Gumroad product URL shown in the upgrade prompt.
     static let gumroadURL = "https://naumantics.gumroad.com/l/euvdwc"
+
+    /// Bump this when shipping a new build. Triggers a clean slate for
+    /// setup state on first launch (stale sudoers, etc) while keeping plays.dat.
+    static let buildToken = "2026-04-13-v1"
 }

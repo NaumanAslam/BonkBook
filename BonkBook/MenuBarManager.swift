@@ -25,9 +25,6 @@ class MenuBarManager {
         setupBindings()
 
         spankManager.checkSudoSetup()
-        if spankManager.isSudoSetup {
-            spankManager.start()
-        }
     }
 
     // MARK: - Status item

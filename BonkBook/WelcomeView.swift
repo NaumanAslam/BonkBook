@@ -5,13 +5,16 @@ import AppKit
 
 final class OnboardingWindowController {
     private var window: NSWindow?
+    var onDismiss: (() -> Void)?
 
     static let shared = OnboardingWindowController()
     private init() {}
 
-    func showIfNeeded() {
-        guard !UserDefaults.standard.bool(forKey: "hasSeenOnboarding") else { return }
+    /// Returns true if onboarding was shown (caller should defer .accessory policy).
+    @discardableResult
+    func showIfNeeded() -> Bool {
         show()
+        return true
     }
 
     func show() {
@@ -43,9 +46,10 @@ final class OnboardingWindowController {
     }
 
     func close() {
-        UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
         window?.close()
         window = nil
+        NSApp.setActivationPolicy(.accessory)
+        onDismiss?()
     }
 }
 

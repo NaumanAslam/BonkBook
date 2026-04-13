@@ -1,0 +1,68 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "012009a722b38ceeb0fd728106603c04bfa321619a36b2c4e6ca5158bdbf7085"
+    }
+  ],
+  "containerPath" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/BonkBook.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx26.2",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Products",
+      "derivedDataPath" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+          "CODE_SIGN_IDENTITY" : "Developer ID Application",
+          "CODE_SIGN_STYLE" : "Manual",
+          "CONFIGURATION_BUILD_DIR" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build",
+          "DEVELOPMENT_TEAM" : "92X99MPMUT"
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "YES",
+          "ONLY_ACTIVE_ARCH" : "YES",
+          "TOOLCHAINS" : "com.apple.dt.toolchain.Metal.32023.864 $(inherited)"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

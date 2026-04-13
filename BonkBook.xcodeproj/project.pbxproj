@@ -76,6 +76,20 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CC11DD22EE33FF4400112233 /* Copy spank binary */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			inputPaths = ("$(PROJECT_DIR)/BonkBook/spank");
+			name = "Copy spank binary";
+			outputPaths = ("$(TARGET_BUILD_DIR)/$(PRODUCT_NAME).app/Contents/MacOS/spank");
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "DEST=\"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/spank\"\ncp \"$PROJECT_DIR/BonkBook/spank\" \"$DEST\"\nchmod +x \"$DEST\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		44E5195C62D93C33B2A52A2D /* BonkBook */ = {
 			isa = PBXNativeTarget;
@@ -83,6 +97,7 @@
 			buildPhases = (
 				ABDA8C1B3503DC7D44902FC0 /* Sources */,
 				40539E3924CFC03F42475A09 /* Resources */,
+				CC11DD22EE33FF4400112233 /* Copy spank binary */,
 			);
 			buildRules = (
 			);

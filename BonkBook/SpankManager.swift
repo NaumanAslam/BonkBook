@@ -76,6 +76,9 @@ class SpankManager: ObservableObject {
     private var stdoutPipe: Pipe?
     private var stdinPipe: Pipe?
     private var lineBuffer = ""
+    // Tracks whether stop() was called intentionally, so terminationHandler
+    // can distinguish a user-initiated stop from a sudo-blocked launch.
+    private var intentionallyStopped = false
 
     static var spankPath: String {
         Bundle.main.url(forAuxiliaryExecutable: "spank")?.path ?? "/usr/local/bin/spank"
@@ -97,12 +100,7 @@ class SpankManager: ObservableObject {
     // MARK: - Setup
 
     func checkSudoSetup() {
-        guard let contents = try? String(contentsOfFile: Self.sudoersPath, encoding: .utf8) else {
-            isSudoSetup = false
-            return
-        }
-        // Verify the sudoers rule points to the current bundled spank path
-        isSudoSetup = contents.contains(Self.spankPath)
+        isSudoSetup = FileManager.default.fileExists(atPath: Self.sudoersPath)
     }
 
     func installSudoersRule(completion: @escaping (Bool) -> Void) {
@@ -163,9 +161,18 @@ class SpankManager: ObservableObject {
 
         proc.terminationHandler = { [weak self] _ in
             DispatchQueue.main.async {
-                self?.isRunning = false
-                self?.isReady = false
-                self?.stdoutPipe?.fileHandleForReading.readabilityHandler = nil
+                guard let self else { return }
+                // If the process died before ever becoming ready and the user
+                // didn't explicitly stop it, sudo almost certainly blocked the
+                // launch (no NOPASSWD rule). Reset isSudoSetup so SetupView
+                // resurfaces and the user is prompted to grant permission.
+                if !self.isReady && !self.intentionallyStopped {
+                    self.isSudoSetup = false
+                }
+                self.intentionallyStopped = false
+                self.isRunning = false
+                self.isReady = false
+                self.stdoutPipe?.fileHandleForReading.readabilityHandler = nil
             }
         }
 
@@ -178,6 +185,7 @@ class SpankManager: ObservableObject {
     }
 
     func stop() {
+        intentionallyStopped = true
         stdoutPipe?.fileHandleForReading.readabilityHandler = nil
         process?.terminate()
         process = nil
