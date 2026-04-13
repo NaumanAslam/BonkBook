@@ -8,6 +8,11 @@
     "pch" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/BonkBook-primary-Bridging-header.pch",
     "swift-dependencies" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/BonkBook-primary.swiftdeps"
   },
+  "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/BonkBook/AppConstants.swift" : {
+    "index-unit-output-path" : "/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/AppConstants.o",
+    "llvm-bc" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/AppConstants.bc",
+    "object" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/AppConstants.o"
+  },
   "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/BonkBook/BonkBookApp.swift" : {
     "index-unit-output-path" : "/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/BonkBookApp.o",
     "llvm-bc" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/BonkBookApp.bc",
@@ -42,6 +47,11 @@
     "index-unit-output-path" : "/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/SpankManager.o",
     "llvm-bc" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/SpankManager.bc",
     "object" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/SpankManager.o"
+  },
+  "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/BonkBook/WelcomeView.swift" : {
+    "index-unit-output-path" : "/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/WelcomeView.o",
+    "llvm-bc" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/WelcomeView.bc",
+    "object" : "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/WelcomeView.o"
   },
   "/Users/naumanaslam/Downloads/XcodeProjects/BonkBook/build/DerivedData/Build/Intermediates.noindex/BonkBook.build/Release/BonkBook.build/DerivedSources/GeneratedAssetSymbols.swift" : {
     "index-unit-output-path" : "/BonkBook.build/Release/BonkBook.build/Objects-normal/arm64/GeneratedAssetSymbols.o",

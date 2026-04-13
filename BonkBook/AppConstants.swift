@@ -5,8 +5,8 @@ enum AppConstants {
     static let isPremium: Bool = false
 
     /// How many slap sounds the free tier allows before locking.
-    static let freeSlapLimit: Int = 10
+    static let freeSlapLimit: Int = 7
 
     /// Gumroad product URL shown in the upgrade prompt.
-    static let gumroadURL = "https://gumroad.com/l/bonkbook"
+    static let gumroadURL = "https://naumantics.gumroad.com/l/euvdwc"
 }

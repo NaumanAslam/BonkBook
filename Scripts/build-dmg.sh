@@ -64,9 +64,9 @@ sign_with_retry --force --sign "$IDENTITY" \
   --entitlements "$PROJECT_DIR/BonkBook/BonkBook.entitlements" \
   "$APP_PATH"
 
-echo "==> Verifying..."
+echo "==> Verifying signature..."
 codesign --verify --deep --strict "$APP_PATH" && echo "    Signature OK"
-spctl --assess --type execute "$APP_PATH" && echo "    Gatekeeper OK"
+# Note: spctl Gatekeeper check is skipped here — it will pass after notarization.
 
 echo "==> Creating DMG with drag-to-install UI..."
 rm -f "$DMG_PATH"
