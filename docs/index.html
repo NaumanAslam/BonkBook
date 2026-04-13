@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BonkBook — Slap your MacBook. It hits back.</title>
+  <meta name="description" content="BonkBook turns your MacBook into a sound machine. Slap it. It reacts. That's the whole thing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:      #1C6BF2;
+      --blue-dark: #1452D0;
+      --blue-dim:  #1a3a7a;
+      --bg:        #080D1A;
+      --surface:   #0E1628;
+      --border:    rgba(255,255,255,0.07);
+      --text:      #E8EDF8;
+      --muted:     #7A8BAD;
+      --green:     #38EB8D;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(8,13,26,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800; font-size: 18px;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo .hand { font-size: 20px; }
+    nav a.nav-link {
+      color: var(--muted); text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      transition: color .2s;
+    }
+    nav a.nav-link:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .btn-nav {
+      background: var(--blue); color: #fff;
+      padding: 8px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 700;
+      text-decoration: none; transition: background .2s, transform .1s;
+    }
+    .btn-nav:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 100px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(28,107,242,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(28,107,242,0.12);
+      border: 1px solid rgba(28,107,242,0.35);
+      border-radius: 100px; padding: 6px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 600;
+      color: #7EB3FF; margin-bottom: 32px;
+      letter-spacing: .5px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .hero-hand {
+      font-size: 88px; line-height: 1;
+      display: block; margin: 0 auto 24px;
+      animation: slap 2.4s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+    @keyframes slap {
+      0%,100% { transform: rotate(0deg) translateY(0); }
+      10%      { transform: rotate(-18deg) translateY(-8px); }
+      18%      { transform: rotate(8deg)  translateY(2px); }
+      26%      { transform: rotate(0deg)  translateY(0); }
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 72px);
+      font-weight: 900; line-height: 1.08;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #5BA4FF 0%, #1C6BF2 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--muted);
+      max-width: 480px; margin: 0 auto 40px;
+      line-height: 1.65;
+    }
+    .hero-sub strong { color: var(--text); }
+
+    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff; padding: 15px 32px; border-radius: 12px;
+      font-size: 16px; font-weight: 700; text-decoration: none;
+      box-shadow: 0 4px 24px rgba(28,107,242,0.4);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(28,107,242,0.5); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); color: var(--muted);
+      padding: 15px 28px; border-radius: 12px;
+      font-size: 15px; font-weight: 600; text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+    .hero-note {
+      margin-top: 18px; font-size: 12px; color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── APP PREVIEW ── */
+    .preview {
+      display: flex; justify-content: center;
+      padding: 0 24px 80px;
+    }
+    .preview-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 8px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      max-width: 320px; width: 100%;
+    }
+    .preview-bar {
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      border-radius: 10px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 8px;
+    }
+    .preview-icon {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .preview-title { font-weight: 700; font-size: 15px; color: #fff; }
+    .preview-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(56,235,141,0.18); border: 1px solid rgba(56,235,141,0.4);
+      border-radius: 100px; padding: 3px 9px;
+      font-size: 10px; font-weight: 600; color: var(--green);
+    }
+    .preview-pill .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 4px var(--green);
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    .preview-stat {
+      display: flex; justify-content: space-around;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .stat-num { font-size: 32px; font-weight: 900; color: var(--blue); text-align: center; }
+    .stat-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+    .preview-rows { padding: 4px 0; }
+    .preview-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 10px; border-radius: 8px;
+      font-size: 12px; margin-bottom: 4px;
+      background: rgba(255,255,255,0.03);
+    }
+    .preview-row span { color: var(--muted); }
+    .pack-btns { display: flex; gap: 6px; }
+    .pack-btn {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; background: rgba(255,255,255,0.06);
+    }
+    .pack-btn.active { background: var(--blue); }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      color: var(--blue); text-transform: uppercase; margin-bottom: 12px;
+    }
+    h2 {
+      font-size: clamp(28px, 5vw, 46px);
+      font-weight: 900; letter-spacing: -1.5px; line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-sub { font-size: 17px; color: var(--muted); max-width: 520px; }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px; margin-top: 48px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .feature-card:hover { border-color: rgba(28,107,242,0.35); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 11px;
+      background: rgba(28,107,242,0.12); border: 1px solid rgba(28,107,242,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 14px;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── HOW IT WORKS ── */
+    .how-bg { background: var(--surface); }
+    .steps { display: flex; flex-direction: column; gap: 0; margin-top: 48px; }
+    .step {
+      display: flex; gap: 24px; align-items: flex-start;
+      padding: 28px 0; border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; font-weight: 700; color: var(--blue);
+      background: rgba(28,107,242,0.1); border: 1px solid rgba(28,107,242,0.25);
+      border-radius: 8px; padding: 6px 12px;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 5px; }
+    .step p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── PRICING ── */
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px; margin-top: 48px; max-width: 620px;
+    }
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+    }
+    .pricing-card.featured {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue), 0 16px 48px rgba(28,107,242,0.2);
+      position: relative;
+    }
+    .featured-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--blue); color: #fff;
+      font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace; letter-spacing: .5px;
+    }
+    .pricing-tier { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .pricing-price { font-size: 44px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+    .pricing-price span { font-size: 18px; font-weight: 600; color: var(--muted); vertical-align: top; margin-top: 8px; display: inline-block; }
+    .pricing-note { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .pricing-features li { font-size: 13px; display: flex; align-items: center; gap: 10px; }
+    .pricing-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .pricing-features li.no::before { content: '✕'; color: var(--muted); }
+    .pricing-features li.no { color: var(--muted); }
+    .btn-full {
+      display: block; text-align: center; padding: 13px;
+      border-radius: 10px; font-size: 14px; font-weight: 700;
+      text-decoration: none; transition: transform .15s, box-shadow .15s;
+    }
+    .btn-full.primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff; box-shadow: 0 4px 16px rgba(28,107,242,0.35);
+    }
+    .btn-full.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(28,107,242,0.45); }
+    .btn-full.ghost {
+      border: 1px solid var(--border); color: var(--muted);
+    }
+    .btn-full.ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+    /* ── FAQ ── */
+    .faq { max-width: 680px; margin-top: 48px; }
+    details {
+      border-bottom: 1px solid var(--border);
+    }
+    summary {
+      padding: 20px 0; cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 15px; font-weight: 600;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .faq-icon { color: var(--muted); font-size: 20px; transition: transform .2s; flex-shrink: 0; }
+    details[open] .faq-icon { transform: rotate(45deg); }
+    details[open] summary { color: var(--blue); }
+    .faq-body { padding: 0 0 20px; font-size: 14px; color: var(--muted); line-height: 1.75; }
+    .faq-body a { color: var(--blue); text-decoration: none; }
+    .faq-body a:hover { text-decoration: underline; }
+
+    /* ── CTA BOTTOM ── */
+    .cta-bottom {
+      text-align: center; padding: 100px 24px;
+      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(28,107,242,0.12) 0%, transparent 70%);
+    }
+    .cta-bottom h2 { margin-bottom: 16px; }
+    .cta-bottom p { color: var(--muted); margin-bottom: 36px; font-size: 17px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; font-size: 14px; color: var(--muted);
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 16px; }
+      .nav-links .btn-nav { display: none; }
+      section { padding: 60px 20px; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="hand">✋</span> BonkBook
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#pricing">Pricing</a>
+    <a class="nav-link" href="#faq">FAQ</a>
+    <a class="btn-nav" href="#pricing">Download Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span> macOS menu bar app · Apple Silicon
+  </div>
+  <span class="hero-hand">✋</span>
+  <h1>Slap your MacBook.<br><em>It hits back.</em></h1>
+  <p class="hero-sub">
+    BonkBook turns your MacBook's built-in accelerometer into a reaction machine.
+    <strong>Hit it. Hear it. Repeat.</strong>
+  </p>
+  <div class="hero-cta">
+    <a class="btn-primary" href="<!-- REPLACE WITH FREE DMG URL -->">
+      ⬇ Download Free
+    </a>
+    <a class="btn-secondary" href="#pricing">
+      Get Full Version →
+    </a>
+  </div>
+  <p class="hero-note">Free · 10 slaps trial · macOS 13+ · Apple Silicon</p>
+</section>
+
+<!-- APP PREVIEW -->
+<div class="preview">
+  <div class="preview-card">
+    <div class="preview-bar">
+      <div class="preview-icon">✋</div>
+      <div style="flex:1">
+        <div class="preview-title">BonkBook</div>
+        <div class="preview-pill"><span class="dot"></span> Listening</div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.45);background:rgba(255,0,0,0.18);border:1px solid rgba(255,80,80,0.4);border-radius:100px;padding:5px 14px;">Stop</div>
+    </div>
+    <div class="preview-stat">
+      <div>
+        <div class="stat-num">42</div>
+        <div class="stat-label">Total Slaps</div>
+      </div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div>
+        <div class="stat-num" style="font-size:22px;padding-top:6px">Severe</div>
+        <div class="stat-label">Last Hit</div>
+      </div>
+    </div>
+    <div class="preview-rows">
+      <div class="preview-row">
+        <span>🔊 Sound Pack</span>
+        <div class="pack-btns">
+          <div class="pack-btn active">✋</div>
+          <div class="pack-btn">🔥</div>
+          <div class="pack-btn">⭐</div>
+        </div>
+      </div>
+      <div class="preview-row">
+        <span>📡 Sensitivity</span>
+        <span style="color:#5BA4FF;font-weight:600;font-size:11px">Medium</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-tag">// features</div>
+    <h2>More than just<br>a slap machine.</h2>
+    <p class="section-sub">It lives in your menu bar, stays out of your way, and absolutely loses it when you bonk your laptop.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📡</div>
+        <h3>Real accelerometer</h3>
+        <p>Reads directly from the MacBook's built-in motion sensor. No screen tapping — actual physical impact detection.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔊</div>
+        <h3>Force-proportional sound</h3>
+        <p>Tap it softly, get a whisper. Slap it hard, get chaos. The louder the impact, the louder the reaction.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎵</div>
+        <h3>3 sound packs</h3>
+        <p>Pain, Sexy, and Halo. Each pack has multiple clips that randomise per slap so it never gets old.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💻</div>
+        <h3>Lid open / close sounds</h3>
+        <p>Open your MacBook lid — it greets you. Close it — it says goodbye. Your laptop has feelings now.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎛️</div>
+        <h3>Tunable sensitivity</h3>
+        <p>Too many false triggers? Too few? Dial in the sensitivity so it fires exactly when you mean it to.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🍎</div>
+        <h3>Menu bar · no dock clutter</h3>
+        <p>Lives in the menu bar like a good citizen. No dock icon, no windows, no drama. Just the ✋.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-bg">
+  <div class="section-inner">
+    <div class="section-tag">// how it works</div>
+    <h2>Dead simple.<br>Stupidly fun.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Download &amp; open</h3>
+          <p>Drag BonkBook to Applications. Open it. A ✋ appears in your menu bar. That's the whole install.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Grant one-time permission</h3>
+          <p>Click the ✋ icon and hit "Grant Permission". The accelerometer needs root access — a tiny background process handles this. You're asked once, never again.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Slap it</h3>
+          <p>Press Start. Slap the side of your MacBook. Hear it scream. Show your coworkers. Watch their faces.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h3>Customise</h3>
+          <p>Switch sound packs. Adjust sensitivity. Set a cooldown so it doesn't fire 12 times a second. Go wild.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-tag">// pricing</div>
+    <h2>Less than a coffee.<br>More chaotic.</h2>
+    <p class="section-sub">Try it free. If you like annoying your colleagues, it's $7 to keep doing it forever.</p>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <div class="pricing-tier">Free Trial</div>
+        <div class="pricing-price"><span>$</span>0</div>
+        <div class="pricing-note">10 slaps to feel it out</div>
+        <ul class="pricing-features">
+          <li>All 3 sound packs</li>
+          <li>Sensitivity controls</li>
+          <li>Lid sounds</li>
+          <li class="no">Unlimited slaps</li>
+          <li class="no">Future sound packs</li>
+        </ul>
+        <a class="btn-full ghost" href="<!-- REPLACE WITH FREE DMG URL -->">⬇ Download Free</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="featured-badge">FULL VERSION</div>
+        <div class="pricing-tier">One-time</div>
+        <div class="pricing-price"><span>$</span>7</div>
+        <div class="pricing-note">Pay once. Bonk forever.</div>
+        <ul class="pricing-features">
+          <li>All 3 sound packs</li>
+          <li>Sensitivity controls</li>
+          <li>Lid sounds</li>
+          <li>Unlimited slaps</li>
+          <li>Future sound packs</li>
+        </ul>
+        <a class="btn-full primary" href="<!-- REPLACE WITH GUMROAD URL -->">Get Full Version →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="section-tag">// faq</div>
+    <h2>You have questions.<br>We have slaps.</h2>
+    <div class="faq">
+      <details>
+        <summary>Will this break my MacBook? <span class="faq-icon">+</span></summary>
+        <div class="faq-body">
+          BonkBook only reads the accelerometer — it doesn't do anything to your hardware. The slapping, however, is entirely your decision and your warranty claim.
+        </div>
+      </details>
+      <details>
+        <summary>Does it work on Intel Macs? <span class="faq-icon">+</span></summary>
+        <div class="faq-body">
+          BonkBook is built for Apple Silicon (M1 and later). Intel Macs have a different accelerometer setup and aren't supported right now.
+        </div>
+      </details>
+      <details>
+        <summary>Why does it need admin permission? <span class="faq-icon">+</span></summary>
+        <div class="faq-body">
+          macOS requires root access to read raw sensor data from the accelerometer. A tiny background daemon runs as root to handle this — the main app runs as a normal user. You grant permission once and it's done.
+        </div>
+      </details>
+      <details>
+        <summary>What's the difference between free and paid? <span class="faq-icon">+</span></summary>
+        <div class="faq-body">
+          The free version gives you 10 slaps across all sessions to try it out. Paid unlocks unlimited slaps and all future sound packs for a one-time $7.
+        </div>
+      </details>
+      <details>
+        <summary>How do I get my download after paying? <span class="faq-icon">+</span></summary>
+        <div class="faq-body">
+          After purchase on Gumroad, you'll get an email with a download link for the full version DMG. Download, drag to Applications, done.
+        </div>
+      </details>
+      <details>
+        <summary>Will it slow my Mac down? <span class="faq-icon">+</span></summary>
+        <div class="faq-body">
+          Nope. The sensor reads at ~400Hz but the daemon is extremely lightweight. Your MacBook won't even notice.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-bottom">
+  <div class="section-tag" style="justify-content:center;display:flex">// ready?</div>
+  <h2>Your MacBook<br><em>has feelings now.</em></h2>
+  <p>Start for free. No account. No signup. Just chaos.</p>
+  <div class="hero-cta">
+    <a class="btn-primary" href="<!-- REPLACE WITH FREE DMG URL -->">
+      ⬇ Download Free
+    </a>
+    <a class="btn-secondary" href="<!-- REPLACE WITH GUMROAD URL -->">
+      Get Full Version →
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">✋ BonkBook</div>
+  <div class="footer-links">
+    <a href="mailto:<!-- REPLACE WITH YOUR EMAIL -->">Contact</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

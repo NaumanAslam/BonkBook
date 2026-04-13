@@ -17,6 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         menuBarManager = MenuBarManager()
+        OnboardingWindowController.shared.showIfNeeded()
     }
 
     func applicationWillTerminate(_ notification: Notification) {

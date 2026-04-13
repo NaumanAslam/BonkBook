@@ -28,19 +28,84 @@ struct MainView: View {
     var body: some View {
         VStack(spacing: 0) {
             HeaderSection(spankManager: spankManager)
-            ScrollView {
-                VStack(spacing: 12) {
-                    StatsCard(spankManager: spankManager)
-                    SoundPackCard(spankManager: spankManager)
-                    DetectionCard(spankManager: spankManager)
-                    SettingsCard(spankManager: spankManager, settings: settings)
+
+            ZStack {
+                ScrollView {
+                    VStack(spacing: 12) {
+                        StatsCard(spankManager: spankManager)
+                        SoundPackCard(spankManager: spankManager)
+                        DetectionCard(spankManager: spankManager)
+                        SettingsCard(spankManager: spankManager, settings: settings)
+                    }
+                    .padding(12)
                 }
-                .padding(12)
+                .blur(radius: spankManager.isLocked ? 3 : 0)
+                .allowsHitTesting(!spankManager.isLocked)
+
+                if spankManager.isLocked {
+                    LockedOverlay()
+                }
             }
+
             FooterSection(spankManager: spankManager)
         }
         .frame(width: 300)
         .background(Color(NSColor.windowBackgroundColor))
+    }
+}
+
+// MARK: - Locked Overlay
+
+struct LockedOverlay: View {
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(.ultraThinMaterial)
+
+            VStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(blue.opacity(0.12))
+                        .frame(width: 56, height: 56)
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(blue)
+                }
+
+                VStack(spacing: 5) {
+                    Text("Trial Limit Reached")
+                        .font(.system(size: 14, weight: .bold))
+                    Text("You've used your \(AppConstants.freeSlapLimit) free slaps.\nUnlock unlimited BonkBook.")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(2)
+                }
+
+                Button {
+                    if let url = URL(string: AppConstants.gumroadURL) {
+                        NSWorkspace.shared.open(url)
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.up.right.circle.fill")
+                            .font(.system(size: 12))
+                        Text("Get Full Version")
+                            .font(.system(size: 12, weight: .bold))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 9)
+                    .background(
+                        Capsule()
+                            .fill(LinearGradient(colors: [blue, blueDark], startPoint: .leading, endPoint: .trailing))
+                            .shadow(color: blue.opacity(0.4), radius: 6, x: 0, y: 3)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(20)
+        }
     }
 }
 
@@ -92,16 +157,26 @@ struct HeaderSection: View {
                     if spankManager.isRunning { spankManager.stop() }
                     else { spankManager.start() }
                 } label: {
-                    Text(spankManager.isRunning ? "Stop" : "Start")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 7)
-                        .background(
-                            Capsule()
-                                .fill(.white.opacity(spankManager.isRunning ? 0.2 : 0.15))
-                                .overlay(Capsule().strokeBorder(.white.opacity(0.3), lineWidth: 1))
-                        )
+                    HStack(spacing: 5) {
+                        Image(systemName: spankManager.isRunning ? "stop.fill" : "play.fill")
+                            .font(.system(size: 9, weight: .black))
+                        Text(spankManager.isRunning ? "Stop" : "Start")
+                            .font(.system(size: 12, weight: .bold))
+                    }
+                    .foregroundStyle(spankManager.isRunning ? Color(red: 1, green: 0.38, blue: 0.38) : blue)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 7)
+                    .background(
+                        Capsule()
+                            .fill(spankManager.isRunning ? Color(red: 1, green: 0.3, blue: 0.3).opacity(0.18) : .white)
+                            .overlay(
+                                Capsule().strokeBorder(
+                                    spankManager.isRunning ? Color(red: 1, green: 0.4, blue: 0.4).opacity(0.6) : Color.clear,
+                                    lineWidth: 1.5
+                                )
+                            )
+                            .shadow(color: spankManager.isRunning ? .clear : .black.opacity(0.18), radius: 4, x: 0, y: 2)
+                    )
                 }
                 .buttonStyle(.plain)
             }
@@ -115,30 +190,70 @@ struct HeaderSection: View {
 
 struct StatusPill: View {
     @ObservedObject var spankManager: SpankManager
+    @State private var pulse = false
 
     var body: some View {
         HStack(spacing: 5) {
             Circle()
                 .fill(dotColor)
                 .frame(width: 6, height: 6)
-                .shadow(color: dotColor.opacity(0.8), radius: dotColor == .green ? 3 : 0)
+                .shadow(color: dotColor.opacity(0.9), radius: isListening ? 4 : 0)
+                .scaleEffect(pulse ? 1.4 : 1.0)
             Text(statusText)
-                .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(.white.opacity(0.85))
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(labelColor)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 3)
-        .background(Capsule().fill(.white.opacity(0.12)))
+        .padding(.horizontal, 9)
+        .padding(.vertical, 4)
+        .background(
+            Capsule()
+                .fill(pillFill)
+                .overlay(Capsule().strokeBorder(pillBorder, lineWidth: 1))
+        )
+        .onChange(of: spankManager.isReady) { ready in
+            pulse = false
+            if ready { startPulse() }
+        }
+        .onAppear { if isListening { startPulse() } }
     }
 
+    private var isListening: Bool { spankManager.isRunning && spankManager.isReady }
+    private var isStarting:  Bool { spankManager.isRunning && !spankManager.isReady }
+
     private var dotColor: Color {
-        guard spankManager.isRunning else { return .white.opacity(0.4) }
-        return spankManager.isReady ? Color(red: 0.27, green: 0.90, blue: 0.55) : .yellow
+        if isListening { return Color(red: 0.22, green: 0.92, blue: 0.55) }
+        if isStarting  { return .yellow }
+        return .white.opacity(0.35)
+    }
+
+    private var pillFill: Color {
+        if isListening { return Color(red: 0.22, green: 0.92, blue: 0.55).opacity(0.18) }
+        if isStarting  { return Color.yellow.opacity(0.15) }
+        return .white.opacity(0.08)
+    }
+
+    private var pillBorder: Color {
+        if isListening { return Color(red: 0.22, green: 0.92, blue: 0.55).opacity(0.45) }
+        if isStarting  { return Color.yellow.opacity(0.35) }
+        return .white.opacity(0.12)
+    }
+
+    private var labelColor: Color {
+        if isListening { return Color(red: 0.22, green: 0.92, blue: 0.55) }
+        if isStarting  { return .yellow }
+        return .white.opacity(0.5)
     }
 
     private var statusText: String {
-        guard spankManager.isRunning else { return "Stopped" }
-        return spankManager.isReady ? "Listening" : "Starting..."
+        if isListening { return "Listening" }
+        if isStarting  { return "Starting..." }
+        return "Stopped"
+    }
+
+    private func startPulse() {
+        withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) {
+            pulse = true
+        }
     }
 }
 
@@ -303,11 +418,10 @@ struct DetectionCard: View {
     }
 
     private var sensitivityLabel: String {
-        switch spankManager.sensitivity {
-        case ..<0.02: return "Max"
-        case ..<0.05: return "High"
-        case ..<0.10: return "Medium"
-        case ..<0.20: return "Low"
+        let sliderVal = 1.0 - (spankManager.sensitivity / 0.5)
+        switch sliderVal {
+        case 0.67...: return "Max"
+        case 0.33...: return "Medium"
         default:      return "Min"
         }
     }

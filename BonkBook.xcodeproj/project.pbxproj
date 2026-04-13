@@ -16,6 +16,8 @@
 		D10FFA0A3EB61494F1CBF62B /* BonkBookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A548644A35E489931CA3D2D /* BonkBookApp.swift */; };
 		E07C2F9F78595167AA4D9243 /* PopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E44625AAF0A0068B6A5002 /* PopoverView.swift */; };
 		F04AFA74DD9948F3041D1BE7 /* MenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513CB04F8276659FA3F8D6FE /* MenuBarManager.swift */; };
+		AA11BB22CC33DD44EE55FF66 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD44EE55FF67 /* WelcomeView.swift */; };
+		BB22CC33DD44EE55FF6600AA /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600AB /* AppConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,8 @@
 		CFED2FD09DD1BB73B0672099 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EFDDDBB7B44AE16F92B1EF78 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		F9F71C3FBCBA4BBB7ADEFD98 /* SoundEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEngine.swift; sourceTree = "<group>"; };
+		AA11BB22CC33DD44EE55FF67 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		BB22CC33DD44EE55FF6600AB /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -55,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				35F3D486729A5E7EB39039D5 /* Assets.xcassets */,
+				BB22CC33DD44EE55FF6600AB /* AppConstants.swift */,
 				265FEBEE9DE3D75C28EC6799 /* BonkBook.entitlements */,
 				3A548644A35E489931CA3D2D /* BonkBookApp.swift */,
 				CFED2FD09DD1BB73B0672099 /* Info.plist */,
@@ -64,6 +69,7 @@
 				EFDDDBB7B44AE16F92B1EF78 /* SetupView.swift */,
 				F9F71C3FBCBA4BBB7ADEFD98 /* SoundEngine.swift */,
 				8E2531BDEB93F815E4345C38 /* SpankManager.swift */,
+				AA11BB22CC33DD44EE55FF67 /* WelcomeView.swift */,
 			);
 			path = BonkBook;
 			sourceTree = "<group>";
@@ -146,6 +152,8 @@
 				C16882B58F83D0F1DCD1F267 /* SetupView.swift in Sources */,
 				797C00AC00F03F0DB87D91D2 /* SoundEngine.swift in Sources */,
 				103AD546D7FC69A6F5C0200C /* SpankManager.swift in Sources */,
+				AA11BB22CC33DD44EE55FF66 /* WelcomeView.swift in Sources */,
+				BB22CC33DD44EE55FF6600AA /* AppConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

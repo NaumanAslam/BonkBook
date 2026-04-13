@@ -68,14 +68,18 @@ echo "==> Verifying..."
 codesign --verify --deep --strict "$APP_PATH" && echo "    Signature OK"
 spctl --assess --type execute "$APP_PATH" && echo "    Gatekeeper OK"
 
-echo "==> Creating DMG..."
+echo "==> Creating DMG with drag-to-install UI..."
 rm -f "$DMG_PATH"
-hdiutil create \
-  -volname "$APP_NAME" \
-  -srcfolder "$APP_PATH" \
-  -ov \
-  -format UDZO \
-  "$DMG_PATH"
+create-dmg \
+  --volname "$APP_NAME" \
+  --window-pos 200 120 \
+  --window-size 540 380 \
+  --icon-size 128 \
+  --icon "$APP_NAME.app" 130 160 \
+  --app-drop-link 410 160 \
+  --hide-extension "$APP_NAME.app" \
+  "$DMG_PATH" \
+  "$APP_PATH"
 
 echo ""
 echo "✅ Done! DMG at: $DMG_PATH"

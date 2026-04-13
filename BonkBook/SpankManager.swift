@@ -41,6 +41,22 @@ class SpankManager: ObservableObject {
     @Published var lastAmplitude: Double = 0
     @Published var lastSeverity = ""
     @Published var isSudoSetup = false
+    @Published var isLocked = false
+
+    // Persisted trial play count — stored outside app bundle so it survives uninstall
+    private static let playsFile: URL = {
+        let dir = FileManager.default
+            .urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("BonkBook", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appendingPathComponent("plays.dat")
+    }()
+
+    private(set) var totalPlays: Int {
+        get { (try? String(contentsOf: Self.playsFile))
+                .flatMap(Int.init) ?? 0 }
+        set { try? String(newValue).write(to: Self.playsFile, atomically: true, encoding: .utf8) }
+    }
 
     // Settings
     @Published var soundMode: SoundMode = .pain
@@ -48,6 +64,12 @@ class SpankManager: ObservableObject {
     @Published var cooldownMs: Int = 750
 
     var onSlap: ((SlapEvent) -> Void)?
+
+    init() {
+        if !AppConstants.isPremium && totalPlays > AppConstants.freeSlapLimit {
+            isLocked = true
+        }
+    }
 
     private let soundEngine = SoundEngine()
     private var process: Process?
@@ -208,13 +230,23 @@ class SpankManager: ObservableObject {
                 DispatchQueue.main.async { self.isReady = true }
             } else if json["slapNumber"] != nil,
                       let event = try? JSONDecoder().decode(SlapEvent.self, from: jsonData) {
+                // Trial limit check
+                if !AppConstants.isPremium {
+                    self.totalPlays += 1
+                    if self.totalPlays > AppConstants.freeSlapLimit {
+                        DispatchQueue.main.async {
+                            self.isLocked = true
+                            self.stop()
+                        }
+                        return
+                    }
+                }
                 DispatchQueue.main.async {
                     self.slapCount = event.slapNumber
                     self.lastAmplitude = event.amplitude
                     self.lastSeverity = event.severity
                     self.onSlap?(event)
                 }
-                // Play sound immediately on the detection thread (don't wait for main)
                 self.soundEngine.play(
                     pack: self.soundMode,
                     amplitude: event.amplitude,
